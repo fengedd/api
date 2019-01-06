@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
+/* eslint-disable prefer-destructuring */
 /**
  * Copyright © 2016-present Kriasoft.
  *
@@ -32,6 +35,7 @@ import accountRoutes from './routes/account';
 import schema from './schema';
 import Context from './Context';
 import errors from './errors';
+import db from './db';
 
 i18next
   .use(LanguageDetector)
@@ -120,7 +124,26 @@ app.get('/graphql/schema', (req, res) => {
   res.type('text/plain').send(printSchema(schema));
 });
 
-app.get('/')
+/*
+const Pool = require('pg').Pool;
+
+const pool = new Pool({
+  user: 'dota',
+  host: 'localhost',
+  database: 'turbo',
+  password: '',
+  port: 5432,
+});
+*/
+
+console.log('Hit');
+app.get('/players', (req, res) => {
+  db.select('*')
+    .from('players')
+    .then(value => {
+      res.status(200).json(value);
+    });
+});
 /*
 //
 //

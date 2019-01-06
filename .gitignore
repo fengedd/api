@@ -6,9 +6,34 @@ node_modules
 npm-debug.log
 yarn-error.log
 docker-compose.override.yml
+docker-compose.yml
+package.json
+yarn.lock
 
 # Editors and IDEs
 .vscode/*
 !.vscode/snippets
 !.vscode/launch.json
 !.vscode/settings.json
+
+# output
+/.temp
+/.tmp
+/build
+/dist
+
+# dependencies
+/node_modules
+.package.swp
+
+# linters
+.eslintcache/
+.eslintrc
+.eslintrc.yaml
+.eslintrc.json
+.eslintrc.js
+.stylelintcache/
+.stylelintrc
+.stylelintrc.yaml
+.stylelintrc.json
+.stylelintrc.js

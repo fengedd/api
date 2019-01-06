@@ -8,10 +8,10 @@
 /* @flow */
 
 import knex from 'knex';
-
+// connection: process.env.DATABASE_URL
 const db = knex({
   client: 'pg',
-  connection: process.env.DATABASE_URL,
+  connection: process.env.CONNECTION_STRING,
   migrations: {
     tableName: 'migrations',
   },
