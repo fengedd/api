@@ -13,7 +13,24 @@ function generateJob(type, payload) {
   const opts = {
     api_word_cloud() {
       return {
-        url: `${openDotaApiUrl}/players/${payload.account_id}`,
+        url: `${openDotaApiUrl}/players/${payload.account_id}/wordcloud`,
+        title: [type].join(),
+        type: 'api',
+        payload,
+      };
+    },
+
+    api_account_info_stratz() {
+      return {
+        url: `${stratzApiUrl}/v1/Player/${payload.account_id}`,
+        title: [type].join(),
+        type: 'api',
+        payload,
+      };
+    },
+    api_account_summary_stratz() {
+      return {
+        url: `${stratzApiUrl}/v1/Player/${payload.account_id}/summary`,
         title: [type].join(),
         type: 'api',
         payload,
@@ -65,8 +82,8 @@ const isError = (err, res, body) => {
 };
 */
 function getData(u, cb) {
-  let delay = Number(config.DEFAULT_DELAY);
-  let timeout = 5000;
+  const delay = Number(config.DEFAULT_DELAY);
+  const timeout = 5000;
   const parse = urllib.parse(u, true);
   const openDotaApi = parse.host === 'api.opendota.com';
   const stratzApi = parse.host === 'api.stratz.com';
