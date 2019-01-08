@@ -11,9 +11,38 @@ function generateJob(type, payload) {
   const stratzApiUrl = 'https://api.stratz.com/api';
   let apiKey;
   const opts = {
-    api_word_cloud() {
+    api_word_cloud_od() {
       return {
         url: `${openDotaApiUrl}/players/${payload.account_id}/wordcloud`,
+        title: [type].join(),
+        type: 'api',
+        payload,
+      };
+    },
+
+    api_peers_od() {
+      return {
+        url: `${openDotaApiUrl}/players/${payload.account_id}/peers`,
+        title: [type].join(),
+        type: 'api',
+        payload,
+      };
+    },
+
+    api_counts_od() {
+      return {
+        url: `${openDotaApiUrl}/players/${payload.account_id}/counts`,
+        title: [type].join(),
+        type: 'api',
+        payload,
+      };
+    },
+
+    api_histogram_od() {
+      return {
+        url: `${openDotaApiUrl}/players/${payload.account_id}/histograms/${
+          payload.histogramCategory
+        }`,
         title: [type].join(),
         type: 'api',
         payload,
@@ -28,6 +57,7 @@ function generateJob(type, payload) {
         payload,
       };
     },
+
     api_account_summary_stratz() {
       return {
         url: `${stratzApiUrl}/v1/Player/${payload.account_id}/summary`,

@@ -8,7 +8,6 @@
 /* eslint-env jest */
 
 import Context from '../Context';
-import { getWordCloud } from '../service/retriever';
 
 describe('Context', () => {
   test('ensureIsAuthenticated()', () => {
@@ -16,11 +15,5 @@ describe('Context', () => {
     const ctx2 = new Context({ user: {} });
     expect(() => ctx1.ensureIsAuthenticated()).toThrow();
     expect(() => ctx2.ensureIsAuthenticated()).not.toThrow();
-  });
-});
-
-describe('WordCloud', () => {
-  test('Fails', () => {
-    expect(() => getWordCloud('a')).toThrow();
   });
 });

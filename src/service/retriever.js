@@ -5,20 +5,50 @@ const async = require('async');
  */
 
 function getWordCloud(accountId) {
-  const container = utility.generateJob('api_word_cloud', {
+  const container = utility.generateJob('api_word_cloud_od', {
     account_id: accountId,
   });
-  return container;
-}
 
-function getPage(url, cb) {
-  const res = utility.getData(url, null);
+  const res = utility.getData(container.url, null);
   return res;
 }
 
-function getAccountInfo(accountId) {
-  const container = utility.generateJob('api_player_stratz', {
+function getPeers(accountId) {
+  const container = utility.generateJob('api_peers_od', {
     account_id: accountId,
+  });
+
+  const res = utility.getData(container.url, null);
+  return res;
+}
+
+function getCounts(accountId) {
+  const container = utility.generateJob('api_counts_od', {
+    account_id: accountId,
+  });
+
+  const res = utility.getData(container.url, null);
+  return res;
+}
+
+const HistogramEnum = { pings: 'pings', apm: 'actions_per_min', eff: 'eff' };
+
+function getHistogramEff(accountId) {
+  return getHistogram(accountId, HistogramEnum.eff);
+}
+
+function getHistogramApm(accountId) {
+  return getHistogram(accountId, HistogramEnum.apm);
+}
+
+function getHistogramPings(accountId) {
+  return getHistogram(accountId, HistogramEnum.pings);
+}
+
+function getHistogram(accountId, cat) {
+  const container = utility.generateJob('api_histogram_od', {
+    account_id: accountId,
+    histogramCategory: cat,
   });
 
   const res = utility.getData(container.url, null);
@@ -44,6 +74,7 @@ function getAccountSummary(accountId) {
 }
 
 // getPage(getWordCloud(244442223).url, null).then(val => console.log(val));
-getAccountSummary(244442223).then(val => console.log(val));
+// getAccountSummary(244442223).then(val => console.log(val));
+// getHistogramApm(244442223).then(val => console.log(val));
 
 module.exports = { getAccountInfo, getWordCloud, getAccountSummary };
