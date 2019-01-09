@@ -7,7 +7,8 @@
 
 /* @flow */
 
-import knex from 'knex';
+// import knex from 'knex';
+const knex = require('knex');
 // connection: process.env.DATABASE_URL
 const db = knex({
   client: 'pg',
@@ -18,4 +19,5 @@ const db = knex({
   debug: process.env.DATABASE_DEBUG === 'true',
 });
 
-export default db;
+// export default db;
+module.exports = { db };
