@@ -137,7 +137,6 @@ const pool = new Pool({
 });
 */
 
-console.log('Hit');
 app.get('/players', (req, res) => {
   db.select('*')
     .from('players')

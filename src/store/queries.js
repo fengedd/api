@@ -1,34 +1,19 @@
 const knex = require('../db');
+const util = require('util');
 const db = knex.db;
 
-function hey() {
-  db('players')
-    .select('id')
-    .then(val => console.log(val))
-    .catch(() => console.log('error'))
-    .finally(() => db.destroy());
-}
+// function upsert(db, table, row, conflict) {}
 function insertPlayer(player, options, cb) {
-  //insert
-  const id = 690;
-
-  db('players')
-    .insert({ id: 690 })
-    .then(() => console.log('Inserted'))
-    .finally(() => {
-      hey();
-      db.destroy();
-    });
-
-  /*
-  knex
-    .db('players')
-    .insert(id)
-    .then(() => console.log('Inserted'))
-    .catch(() => console.log('error'));
-  //    .finally(() => db.destroy());
-  */
-  //upsert
+  const table = 'players';
+  const data = { id: 611920, name: 'whothesssi it' };
+  const insert = db(table).insert(data);
+  const update = db.queryBuilder().update(data);
+  const res = db
+    .raw(`? ON CONFLICT (id) DO ? returning *`, [insert, update])
+    .get('rows')
+    .get(0)
+    .then(val => console.log(val))
+    .finally(() => db.destroy());
 }
 
 insertPlayer(null, null, null);
