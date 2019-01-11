@@ -38,6 +38,8 @@ import Context from './Context';
 import errors from './errors';
 import db from './db';
 
+const api = require('./routes/api');
+
 i18next
   .use(LanguageDetector)
   .use(i18nextBackend)
@@ -92,14 +94,17 @@ app.use(passport.session());
 app.use(flash());
 
 app.use(accountRoutes);
+app.use(api);
 
 // The following routes are intended to be used in development mode only
 if (process.env.NODE_ENV !== 'production') {
   // A route for testing email templates
+  /*
   app.get('/:email(email|emails)/:template', (req, res) => {
     const message = email.render(req.params.template, { t: req.t, v: 123 });
     res.send(message.html);
   });
+  */
 
   // A route for testing authentication/authorization
   app.get('/', (req, res) => {
@@ -121,37 +126,12 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
+/*
 app.get('/graphql/schema', (req, res) => {
   res.type('text/plain').send(printSchema(schema));
 });
 
-/*
-const Pool = require('pg').Pool;
 
-const pool = new Pool({
-  user: 'dota',
-  host: 'localhost',
-  database: 'turbo',
-  password: '',
-  port: 5432,
-});
-*/
-
-app.get('/players', (req, res) => {
-  db.select('*')
-    .from('players')
-    .then(value => {
-      res.status(200).json(value);
-    });
-});
-/*
-//
-//
-//
-//
-//
-//
-*/
 
 app.use(
   '/graphql',
@@ -172,6 +152,7 @@ app.use(
     },
   })),
 );
+*/
 
 const pe = new PrettyError();
 pe.skipNodeFiles();

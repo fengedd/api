@@ -2,7 +2,7 @@ const knex = require('../db');
 const util = require('util');
 const db = knex.db;
 
-function insertPlayer(player) {
+async function insertPlayer(player) {
   const table = 'players';
   const data = player;
   const insert = db(table).insert(data);
@@ -15,7 +15,7 @@ function insertPlayer(player) {
   return res;
 }
 
-function getPlayer(id) {
+async function getPlayer(id) {
   const table = 'players';
   const data = id;
   const query = db(table)
@@ -31,7 +31,7 @@ function getPlayer(id) {
 }
 
 const caller = async () => {
-  const result = await getPlayer(690); //insertPlayer(null, null, null);
+  const result = await getPlayer(1); //insertPlayer(null, null, null);
   console.log(result);
 };
 
