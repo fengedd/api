@@ -39,6 +39,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "source-map-support": "^0.5.0",
+    "swearjar": "^0.2.0",
     "url": "^0.11.0",
     "util": "^0.11.1",
     "validator": "^9.2.0"
