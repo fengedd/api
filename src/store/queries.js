@@ -1,6 +1,4 @@
-const knex = require('../db');
-const util = require('util');
-const db = knex.db;
+const db = require('../db');
 
 async function insertPlayer(player) {
   const table = 'players';
@@ -30,11 +28,13 @@ async function getPlayer(id) {
   return res;
 }
 
-const caller = async () => {
+const asyncMiddleWare = async () => {
   const result = await getPlayer(1); //insertPlayer(null, null, null);
-  console.log(result);
+  return result;
 };
 
-caller();
+// caller();
+
+module.exports = { insertPlayer, getPlayer, caller: asyncMiddleWare };
 
 // insertPlayer(null, null, null);
