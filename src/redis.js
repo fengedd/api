@@ -1,8 +1,5 @@
 /**
- * Copyright © 2016-present Kriasoft.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
+ * Inter face to Redis Client
  */
 
 /* @flow */
@@ -11,6 +8,7 @@ import redis from 'redis';
 import bluebird from 'bluebird';
 import errors from './errors';
 
+console.log('connecting %s', process.env.REDIS_URL);
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
 
