@@ -3,12 +3,6 @@
  */
 const swearJar = require('swearjar');
 
-/** Calculates the negative sentiment score of a sentence */
-function getProfanityUsage(json) {
-  const obj = JSON.parse(json);
-  return calculatesProfanityUsage(obj);
-}
-
 function calculatesProfanityUsage(obj) {
   const typedWords = obj.my_word_counts;
 
@@ -37,4 +31,15 @@ function calculatesProfanityUsage(obj) {
   return score;
 }
 
-module.exports = getProfanityUsage;
+function getProfanityUsage(json) {
+  try {
+    const obj = JSON.parse(json);
+    return calculatesProfanityUsage(obj);
+  } catch (err) {}
+}
+
+// setTimeout(caller, 3000, 'a');
+// setTimeout(caller, 1000, 'b');
+// console.log('fuck');
+
+module.exports = { getProfanityUsage };

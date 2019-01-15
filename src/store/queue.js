@@ -11,6 +11,7 @@ const someQueue = new Queue('some queue', conn_info);
 someQueue.process(job => {
   // console.log(job);
   job.progress(42);
+
   console.log(job.data);
   // return true;
   return Promise.reject(new Error('Fusk'));
