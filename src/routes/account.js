@@ -1,4 +1,6 @@
 /**
+ * DELETE
+ *
  * Copyright © 2016-present Kriasoft.
  *
  * This source code is licensed under the MIT license found in the

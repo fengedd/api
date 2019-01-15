@@ -1,6 +1,6 @@
 const db = require('../db');
 
-async function insertPlayer(player) {
+function insertPlayer(player) {
   const table = 'players';
   const data = player;
   const insert = db(table).insert(data);
@@ -13,7 +13,7 @@ async function insertPlayer(player) {
   return res;
 }
 
-async function getPlayer(id) {
+function getPlayer(id) {
   const table = 'players';
   const data = id;
   const query = db(table)
@@ -28,13 +28,6 @@ async function getPlayer(id) {
   return res;
 }
 
-const asyncMiddleWare = async () => {
-  const result = await getPlayer(1); //insertPlayer(null, null, null);
-  return result;
-};
+getPlayer(1).then(val => console.log(val));
 
-// caller();
-
-module.exports = { insertPlayer, getPlayer, caller: asyncMiddleWare };
-
-// insertPlayer(null, null, null);
+module.exports = { insertPlayer, getPlayer };

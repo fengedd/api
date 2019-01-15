@@ -1,3 +1,7 @@
+/**
+ * Worker interfaces with OpenDota API
+ */
+
 const utility = require('../utils/utility');
 
 const HistogramEnum = { pings: 'pings', apm: 'actions_per_min', eff: 'eff' };

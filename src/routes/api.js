@@ -11,7 +11,7 @@ console.log('Route API loaded');
 /**
  * Player endpoint
  */
-api.get('/players/:id', async (req, res) => {
+api.get('/api/v1/players/:id', async (req, res) => {
   const accountId = req.params.id;
   try {
     // if (!req.params.id) throwError(400, 'Bad Request');

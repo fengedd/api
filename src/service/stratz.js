@@ -1,3 +1,6 @@
+/**
+ * Worker interfaces with Stratz API
+ */
 const utility = require('../utils/utility');
 
 function getAccountInfo(accountId) {
