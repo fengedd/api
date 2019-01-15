@@ -5,8 +5,6 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-/* @flow */
-
 import type { ValidationErrorEntry } from './types';
 
 // TODO: Log the error to Google Stackdriver, Rollbar etc.
