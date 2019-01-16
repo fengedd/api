@@ -6,6 +6,16 @@ const utility = require('../utils/utility');
 
 const HistogramEnum = { pings: 'pings', apm: 'actions_per_min', eff: 'eff' };
 
+function getAllOpenDota(accountId) {
+  const wordcloud = getWordCloud(accountId);
+  const peers = getPeers(accountId);
+  const counts = getCounts(accountId);
+  const eff = getHistogramEff(accountId);
+  const apm = getHistogramApm(accountId);
+  const pings = getHistogramPings(accountId);
+  return Promise.all([wordcloud, peers, counts, eff, apm, pings]);
+}
+
 function getWordCloud(accountId) {
   const container = utility.generateJob('api_word_cloud_od', {
     account_id: accountId,
@@ -54,3 +64,5 @@ function getHistogram(accountId, cat) {
   const res = utility.getData(container.url, null);
   return res;
 }
+
+module.exports = { getAllOpenDota, getWordCloud, getPeers };

@@ -5,7 +5,6 @@ const swearJar = require('swearjar');
 
 function calculatesProfanityUsage(obj) {
   const typedWords = obj.my_word_counts;
-
   const score = {
     inappropriate: 0,
     sexual: 0,
@@ -33,13 +32,10 @@ function calculatesProfanityUsage(obj) {
 
 function getProfanityUsage(json) {
   try {
-    const obj = JSON.parse(json);
-    return calculatesProfanityUsage(obj);
-  } catch (err) {}
+    return calculatesProfanityUsage(json);
+  } catch (err) {
+    console.error(err);
+  }
 }
-
-// setTimeout(caller, 3000, 'a');
-// setTimeout(caller, 1000, 'b');
-// console.log('fuck');
 
 module.exports = { getProfanityUsage };
