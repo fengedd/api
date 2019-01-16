@@ -37,3 +37,4 @@ ex().then(val => {
   console.log(getPeersAnalysis(val));
 });
 */
+module.exports = { getPeersAnalysis };
