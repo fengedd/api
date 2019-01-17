@@ -30,6 +30,7 @@
     "knex": "^0.14.2",
     "node-fetch": "^1.7.3",
     "nodemailer": "^4.4.1",
+    "normal-distribution": "^0.0.7",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "passport-google-oauth20": "^1.0.0",

@@ -59,6 +59,17 @@ function cleanUpPlayerInfo(obj) {
   return subset;
 }
 
+function cleanUpSummary(obj) {}
+async function playerAccountSummaryProcessor(accountId) {
+  try {
+    const stratzAccountSummary = await stratz.getAccountSummary(accountId);
+    const cleanedUpSummary = cleanUpSummary(stratzAccountSummary);
+    return cleanedUpSummary;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 async function playerInfoProcessor(accountId) {
   try {
     const stratzAccountInfo = await stratz.getAccountInfo(accountId);
@@ -73,6 +84,7 @@ function getPlayer(accountId) {
   // Async twitch stream analysis
   // const profanityScorePromise = profanityProcessor(accountId);
   // const peersAnalysisPromise = peersProcessor(accountId);
+
   // Player Info
   const playerInfoPromise = playerInfoProcessor(accountId);
   // Player Strength
