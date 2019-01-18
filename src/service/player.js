@@ -109,38 +109,18 @@ async function playerSummaryTimeProcessor(time) {
   } catch (err) {
     console.error(err);
   }
-
-  // const gameMode = ;
 }
 
 async function playerAccountSummaryProcessor(accountId) {
   try {
     const stratzAccountSummary = await stratz.getAccountSummary(accountId);
     const { oneMonth, sixMonths, allTime } = stratzAccountSummary;
-    return playerSummaryTimeProcessor(allTime);
-    /*
-    const {
-      rankMatches: RankMatchesOM,
-      laneMatches: LaneMatchesOM,
-      gameModeMatches: GameModeMatchesOM,
-    } = oneMonth;
-    const {
-      rankMatches: RankMatchesSM,
-      laneMatches: LaneMatchesSM,
-      gameModeMatches: GameModeMatchesSM,
-    } = sixMonths;
-    const {
-      rankMatches: RankMatchesAT,
-      laneMatches: LaneMatchesAT,
-      gameModeMatches: GameModeMatchesAT,
-    } = allTime;
 
     const res = {
-      oneMonth: ratingEstimate(RankMatchesOM),
-      sixMonths: ratingEstimate(RankMatchesSM),
-      allTime: ratingEstimate(RankMatchesAT),
+      oneMonth: await playerSummaryTimeProcessor(oneMonth),
+      sixMonths: await playerSummaryTimeProcessor(sixMonths),
+      allTime: await playerSummaryTimeProcessor(allTime),
     };
-    */
 
     return res;
   } catch (err) {
