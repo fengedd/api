@@ -1,5 +1,6 @@
 /**
  * Performance rating estimator
+
  * Formula:
  *  T = Total # games;
  *  r = rank i;
@@ -7,21 +8,18 @@
  *  w = wins at i;
  *  l = losses at i;
 
- * Rating Estimate = (1/T) Σ i = 1 to 7 t * (r + 0.5 + 1 * (w - l)/t)
+ * Rating Estimate = (1/T) Σ i = 1 to 7  t * (r + 0.5 + 1 * (w - l)/t)
  *
  */
 
 import NormalDistribution from 'normal-distribution';
 
-// const nd = require('normal-distribution');
-
-const IMP_MEAN = 100;
-const IMP_STD = 20;
-
 function convertRatingToRank(rating) {
   let rank = Math.round(rating * 100);
   let medals = rank % 100;
-  rank = Math.floor(rank / 100).toString();
+  rank = Math.floor(rank / 100);
+  rank = rank >= 9 ? 8 : rank;
+  rank = rank.toString();
   if (medals >= 0 && medals < 20) {
     medals = '1';
   } else if (medals >= 20 && medals < 40) {
@@ -36,49 +34,44 @@ function convertRatingToRank(rating) {
 
   return Number(rank + medals);
 }
-function ratingEstimate(arr) {
-  if (arr.length === 0) return 0;
-  let T = 0;
-  let K = 0;
 
+function calculateRating(arr, isImp) {
+  let T = 0;
+  const IMP_MEAN = 100;
+  const IMP_STD = 20;
+  const normalDistImp = new NormalDistribution(IMP_MEAN, IMP_STD);
   const reducer = (accumulator, currVal) => accumulator + currVal;
   let totalRating = arr
     .map(obj => {
-      const { id, matchCount, win, imp, ...rest } = obj;
-      if (id === 0) return 0;
-      const loss = matchCount - win;
-      T += matchCount;
-      const rating = matchCount * (id + 0.5 + (1 * (win - loss)) / matchCount);
-      return rating;
-    })
-    .reduce(reducer);
-
-  const normalDistImp = new NormalDistribution(IMP_MEAN, IMP_STD);
-
-  let impRating = arr
-    .map(obj => {
       let { id, matchCount, win, imp, ...rest } = obj;
       if (id === 0) return 0;
-
       if (Number.isNaN(imp) || imp === undefined) imp = 100;
       const zScore = normalDistImp.zScore(imp);
-      console.log(zScore);
       const loss = matchCount - win;
-      K += matchCount;
+      const individualWeight = isImp ? 0.5 : 0;
+      const winLossWeight = 1 - individualWeight;
+      T += matchCount;
       const rating =
         matchCount *
-        (id + 0.5 + 0.5 * ((win - loss) / matchCount) + 0.5 * zScore);
+        (id +
+          0.5 +
+          winLossWeight * ((win - loss) / matchCount) +
+          individualWeight * zScore);
       return rating;
     })
     .reduce(reducer);
-
-  impRating /= K;
   totalRating /= T;
-  console.log('Impact rating: ', impRating);
-  console.log('Total rating: ', totalRating);
   return convertRatingToRank(totalRating);
 }
 
+export default function ratingEstimate(arr) {
+  const res = { estimatedRank: null, estimatedIndividualRank: null };
+  if (arr.length === 0) return res;
+  res.estimatedRank = calculateRating(arr, false);
+  res.estimatedIndividualRank = calculateRating(arr, true);
+  return res;
+}
+/*
 const arr = [
   {
     id: 6,
@@ -266,3 +259,4 @@ console.log(ratingEstimate(jean));
 console.log(ratingEstimate(high));
 console.log(ratingEstimate(yond));
 console.log(ratingEstimate(num1));
+*/

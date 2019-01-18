@@ -1,7 +1,9 @@
+import ratingEstimate from './performance-rating-estimator';
+
 const profanity = require('./profanity-analyzer');
 const opendota = require('./opendota');
 const stratz = require('./stratz');
-const peers_analyzer = require('./peer-analyzer');
+const peersAnalyzer = require('./peer-analyzer');
 
 function callOdStratz(accountId) {
   return opendota.getAllOpenDota(accountId);
@@ -20,7 +22,7 @@ async function profanityProcessor(accountId) {
 async function peersProcessor(accountId) {
   try {
     const peers = await opendota.getPeers(accountId);
-    const peersResult = await peers_analyzer.getPeersAnalysis(peers);
+    const peersResult = await peersAnalyzer.getPeersAnalysis(peers);
     return peersResult;
   } catch (err) {
     console.error(err);
@@ -59,12 +61,32 @@ function cleanUpPlayerInfo(obj) {
   return subset;
 }
 
-function cleanUpSummary(obj) {}
 async function playerAccountSummaryProcessor(accountId) {
   try {
     const stratzAccountSummary = await stratz.getAccountSummary(accountId);
-    const cleanedUpSummary = cleanUpSummary(stratzAccountSummary);
-    return cleanedUpSummary;
+    const { oneMonth, sixMonths, allTime } = stratzAccountSummary;
+    const {
+      rankMatches: RankMatchesOM,
+      laneMatches: LaneMatchesOM,
+      gameModeMatches: GameModeMatchesOM,
+    } = oneMonth;
+    const {
+      rankMatches: RankMatchesSM,
+      laneMatches: LaneMatchesSM,
+      gameModeMatches: GameModeMatchesSM,
+    } = sixMonths;
+    const {
+      rankMatches: RankMatchesAT,
+      laneMatches: LaneMatchesAT,
+      gameModeMatches: GameModeMatchesAT,
+    } = allTime;
+
+    const res = {
+      oneMonth: {},
+      sixMonths: {},
+      allTime: {},
+    };
+    return ratingEstimate(RankMatchesOM);
   } catch (err) {
     console.error(err);
   }
@@ -86,14 +108,17 @@ function getPlayer(accountId) {
   // const peersAnalysisPromise = peersProcessor(accountId);
 
   // Player Info
-  const playerInfoPromise = playerInfoProcessor(accountId);
+  // const playerInfoPromise = playerInfoProcessor(accountId);
+  // Player Summary
+  // const playerSummaryPromise = playerAccountSummaryProcessor(accountId);
+
   // Player Strength
   // Toxicicity
 
   // Async OpenDota
 
   // Async Stratz
-  return Promise.all([playerInfoPromise]);
+  return Promise.all([playerSummaryPromise]);
 }
 
 getPlayer(244442223).then(v => console.log(v));
