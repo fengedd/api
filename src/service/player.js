@@ -61,10 +61,64 @@ function cleanUpPlayerInfo(obj) {
   return subset;
 }
 
+function jungleGamesCalc(arr) {
+  let res = { totalGames: null, jungleGames: null };
+  if (arr.length === 0) return res;
+  let jungleGames = 0;
+  let totalGames = 0;
+  arr.forEach(e => {
+    const isJungleGame = e.id === 4;
+    if (isJungleGame) {
+      jungleGames = e.matchCount;
+    }
+
+    totalGames += e.matchCount;
+  });
+
+  res = { totalGames, jungleGames };
+
+  return res;
+}
+
+function lowPrioGamesCalc(arr) {
+  let res = { totalGames: null, lowPrioGames: null };
+  if (arr.length === 0) return res;
+  let lowPrioGames = 0;
+  let totalGames = 0;
+  arr.forEach(e => {
+    const isLowPrioGame = e.id === 4;
+    if (isLowPrioGame) {
+      lowPrioGames = e.matchCount;
+    }
+
+    totalGames += e.matchCount;
+  });
+
+  res = { totalGames, lowPrioGames };
+
+  return res;
+}
+
+async function playerSummaryTimeProcessor(time) {
+  const { rankMatches, laneMatches, gameModeMatches } = time;
+  try {
+    const rating = ratingEstimate(rankMatches);
+    const jungleGames = jungleGamesCalc(laneMatches);
+    const lowPrioGames = lowPrioGamesCalc(gameModeMatches);
+    return { rating, lowPrioGames, jungleGames };
+  } catch (err) {
+    console.error(err);
+  }
+
+  // const gameMode = ;
+}
+
 async function playerAccountSummaryProcessor(accountId) {
   try {
     const stratzAccountSummary = await stratz.getAccountSummary(accountId);
     const { oneMonth, sixMonths, allTime } = stratzAccountSummary;
+    return playerSummaryTimeProcessor(allTime);
+    /*
     const {
       rankMatches: RankMatchesOM,
       laneMatches: LaneMatchesOM,
@@ -82,11 +136,13 @@ async function playerAccountSummaryProcessor(accountId) {
     } = allTime;
 
     const res = {
-      oneMonth: {},
-      sixMonths: {},
-      allTime: {},
+      oneMonth: ratingEstimate(RankMatchesOM),
+      sixMonths: ratingEstimate(RankMatchesSM),
+      allTime: ratingEstimate(RankMatchesAT),
     };
-    return ratingEstimate(RankMatchesOM);
+    */
+
+    return res;
   } catch (err) {
     console.error(err);
   }
@@ -110,7 +166,7 @@ function getPlayer(accountId) {
   // Player Info
   // const playerInfoPromise = playerInfoProcessor(accountId);
   // Player Summary
-  // const playerSummaryPromise = playerAccountSummaryProcessor(accountId);
+  const playerSummaryPromise = playerAccountSummaryProcessor(accountId);
 
   // Player Strength
   // Toxicicity
