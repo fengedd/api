@@ -1,19 +1,16 @@
 import ratingEstimate from './performance-rating-estimator';
+import { getWordCloud, getPeers } from './opendota';
+import { getWordCloudAnalysis } from './profanity-analyzer';
 
-const profanity = require('./profanity-analyzer');
-const opendota = require('./opendota');
 const stratz = require('./stratz');
 const peersAnalyzer = require('./peer-analyzer');
 
-function callOdStratz(accountId) {
-  return opendota.getAllOpenDota(accountId);
-}
-
-async function profanityProcessor(accountId) {
+async function wordCloudProcessor(accountId) {
   try {
-    const wordCloud = await opendota.getWordCloud(accountId);
-    const profanityScore = await profanity.getProfanityUsage(wordCloud);
-    return profanityScore;
+    // twitch regex ((tw(\s|\.tv)|twitch(\s|\.tv|\/)|t?\.tv)(\/|\s)?))
+    const wordCloud = await getWordCloud(accountId);
+    const profanityScore = getWordCloudAnalysis(wordCloud);
+    return { profanityScore };
   } catch (err) {
     console.error(err);
   }
@@ -21,9 +18,9 @@ async function profanityProcessor(accountId) {
 
 async function peersProcessor(accountId) {
   try {
-    const peers = await opendota.getPeers(accountId);
-    const peersResult = await peersAnalyzer.getPeersAnalysis(peers);
-    return peersResult;
+    const peersPayload = await getPeers(accountId);
+    const peers = peersAnalyzer.getPeersAnalysis(peersPayload);
+    return { peers };
   } catch (err) {
     console.error(err);
   }
@@ -140,21 +137,17 @@ async function playerInfoProcessor(accountId) {
 
 function getPlayer(accountId) {
   // Async twitch stream analysis
-  // const profanityScorePromise = profanityProcessor(accountId);
-  // const peersAnalysisPromise = peersProcessor(accountId);
-
-  // Player Info
-  // const playerInfoPromise = playerInfoProcessor(accountId);
-  // Player Summary
+  const profanityScorePromise = wordCloudProcessor(accountId);
+  const peersAnalysisPromise = peersProcessor(accountId);
+  const playerInfoPromise = playerInfoProcessor(accountId);
   const playerSummaryPromise = playerAccountSummaryProcessor(accountId);
 
-  // Player Strength
-  // Toxicicity
-
-  // Async OpenDota
-
-  // Async Stratz
-  return Promise.all([playerSummaryPromise]);
+  return Promise.all([
+    profanityScorePromise,
+    peersAnalysisPromise,
+    playerInfoPromise,
+    playerSummaryPromise,
+  ]);
 }
 
 getPlayer(244442223).then(v => console.log(v));

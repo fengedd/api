@@ -71,6 +71,7 @@ export default function ratingEstimate(arr) {
   res.estimatedIndividualRank = calculateRating(arr, true);
   return res;
 }
+
 /*
 const arr = [
   {

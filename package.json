@@ -18,6 +18,8 @@
     "express-graphql": "^0.6.11",
     "express-session": "^1.15.6",
     "faker": "^4.1.0",
+    "franc": "^4.0.0",
+    "franc-min": "^4.0.0",
     "graphql": "^0.12.3",
     "graphql-relay": "^0.5.4",
     "handlebars": "^4.0.11",
