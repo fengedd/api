@@ -3,7 +3,8 @@ function getFriends(player) {
   return player.with_games > player.against_games;
 }
 
-function getPeersAnalysis(obj) {
+// eslint-disable-next-line import/prefer-default-export
+export function getPeersAnalysis(obj) {
   const list = obj;
   const friends = [];
   const enemies = [];
@@ -37,4 +38,3 @@ ex().then(val => {
   console.log(getPeersAnalysis(val));
 });
 */
-module.exports = { getPeersAnalysis };
