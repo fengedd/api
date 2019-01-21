@@ -1,4 +1,4 @@
-import { getAccountInfo } from './stratz';
+import { getAccountInfo } from '../../stratz';
 
 function cleanUpPlayerInfo(obj) {
   const {
@@ -30,7 +30,7 @@ function cleanUpPlayerInfo(obj) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export async function playerInfoProcessor(accountId) {
+export async function processPlayerInfo(accountId) {
   try {
     const stratzAccountInfo = await getAccountInfo(accountId);
     return cleanUpPlayerInfo(stratzAccountInfo);

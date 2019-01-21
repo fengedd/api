@@ -1,10 +1,12 @@
+import { getPeers } from '../../opendota';
+
 /* eslint-disable no-param-reassign */
-function getFriends(player) {
+function isFriend(player) {
   return player.with_games > player.against_games;
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export function getPeersAnalysis(obj) {
+function enemyFriendCounter(obj) {
   const list = obj;
   const friends = [];
   const enemies = [];
@@ -12,7 +14,7 @@ export function getPeersAnalysis(obj) {
     delete player.with_gpm_sum;
     delete player.with_xpm_sum;
 
-    if (getFriends(player)) {
+    if (isFriend(player)) {
       friends.push(player);
     } else {
       enemies.push(player);
@@ -20,6 +22,16 @@ export function getPeersAnalysis(obj) {
   });
 
   return { friends, enemies };
+}
+
+// eslint-disable-next-line import/prefer-default-export
+export async function processPeers(accountId) {
+  try {
+    const peersPayload = await getPeers(accountId);
+    return enemyFriendCounter(peersPayload);
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 /*

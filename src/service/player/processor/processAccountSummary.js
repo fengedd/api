@@ -1,5 +1,5 @@
-import ratingEstimate from './performance-rating-estimator';
-import { getAccountSummary } from './stratz';
+import ratingEstimate from '../performance-rating-estimator';
+import { getAccountSummary } from '../../stratz';
 
 function jungleGamesCount(arr) {
   let res = { totalGames: null, jungleGames: null };
@@ -16,6 +16,7 @@ function jungleGamesCount(arr) {
   res = { totalGames, jungleGames };
   return res;
 }
+
 function lowPrioGamesCount(arr) {
   let res = { totalGames: null, lowPrioGames: null };
   if (arr.length === 0) return res;
@@ -32,7 +33,7 @@ function lowPrioGamesCount(arr) {
   return res;
 }
 
-async function playerSummaryTimeProcessor(time) {
+function processPlayerTimeSummary(time) {
   try {
     const { rankMatches, laneMatches, gameModeMatches } = time;
     return {
@@ -45,14 +46,14 @@ async function playerSummaryTimeProcessor(time) {
   }
 }
 // eslint-disable-next-line import/prefer-default-export
-export async function playerAccountSummaryProcessor(accountId) {
+export async function processPlayerAccountSummary(accountId) {
   try {
     const stratzAccountSummary = await getAccountSummary(accountId);
     const { oneMonth, sixMonths, allTime } = stratzAccountSummary;
     return {
-      oneMonth: await playerSummaryTimeProcessor(oneMonth),
-      sixMonths: await playerSummaryTimeProcessor(sixMonths),
-      allTime: await playerSummaryTimeProcessor(allTime),
+      oneMonth: processPlayerTimeSummary(oneMonth),
+      sixMonths: processPlayerTimeSummary(sixMonths),
+      allTime: processPlayerTimeSummary(allTime),
     };
   } catch (err) {
     console.error(err);

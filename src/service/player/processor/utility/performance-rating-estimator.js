@@ -43,7 +43,8 @@ function calculateRating(arr, isImp) {
   const reducer = (accumulator, currVal) => accumulator + currVal;
   let totalRating = arr
     .map(obj => {
-      let { id, matchCount, win, imp, ...rest } = obj;
+      const { id, matchCount, win } = obj;
+      let { imp } = obj;
       if (id === 0) return 0;
       if (Number.isNaN(imp) || imp === undefined) imp = 100;
       const zScore = normalDistImp.zScore(imp);

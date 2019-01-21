@@ -1,5 +1,5 @@
 /**
- * Worker interfaces with Stratz API
+ * Worker interfaces with external Stratz API
  */
 const utility = require('../utils/utility');
 

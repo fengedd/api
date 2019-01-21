@@ -1,5 +1,5 @@
 /**
- * Worker interfaces with OpenDota API
+ * Worker interfaces with external OpenDota API
  */
 
 const utility = require('../utils/utility');
