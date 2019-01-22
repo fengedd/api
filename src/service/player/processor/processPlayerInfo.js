@@ -1,4 +1,27 @@
-import { getAccountInfo } from '../../stratz';
+import { getAccountInfo } from '../../stratz/stratz';
+
+function cleanUpNames(arr) {
+  let res = [];
+  if (arr.length === 0) return res;
+  const dict = {};
+  arr.forEach(e => {
+    const { name } = e;
+    if (dict[name] === undefined) {
+      dict[name] = 1;
+    } else {
+      dict[name] += 1;
+    }
+  });
+
+  const sortedArray = [];
+  Object.entries(dict).forEach(e => {
+    sortedArray.push({ name: e[0], count: e[1] });
+  });
+  sortedArray.sort((a, b) => b.count - a.count);
+
+  res = sortedArray.slice(0, 10);
+  return res;
+}
 
 function cleanUpPlayerInfo(obj) {
   const {
@@ -12,8 +35,12 @@ function cleanUpPlayerInfo(obj) {
     previousRank,
     isAnonymous,
     firstMatchDate,
-    names,
   } = obj;
+
+  let { names } = obj;
+
+  names = cleanUpNames(names);
+
   return {
     name,
     profileUrl,
@@ -36,5 +63,6 @@ export async function processPlayerInfo(accountId) {
     return cleanUpPlayerInfo(stratzAccountInfo);
   } catch (err) {
     console.error(err);
+    return null;
   }
 }

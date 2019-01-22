@@ -1,4 +1,4 @@
-import { getPeers } from '../../opendota';
+import { getPeers } from '../../opendota/opendota';
 
 /* eslint-disable no-param-reassign */
 function isFriend(player) {
@@ -31,6 +31,7 @@ export async function processPeers(accountId) {
     return enemyFriendCounter(peersPayload);
   } catch (err) {
     console.error(err);
+    return null;
   }
 }
 

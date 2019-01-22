@@ -3,7 +3,7 @@ import { processPlayerInfo } from './processor/processPlayerInfo';
 import { processPlayerAccountSummary } from './processor/processAccountSummary';
 import { processPeers } from './processor/processPeers';
 
-function getPlayer(accountId) {
+function player(accountId) {
   return Promise.all([
     processPlayerInfo(accountId),
     processPlayerAccountSummary(accountId),
@@ -12,4 +12,4 @@ function getPlayer(accountId) {
   ]);
 }
 
-getPlayer(244442223).then(v => console.log(v));
+export { player as default };

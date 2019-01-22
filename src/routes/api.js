@@ -1,6 +1,9 @@
 /**
  * API Router
  */
+
+import player from '../dispatcher';
+
 const express = require('express');
 const queries = require('../store/queries');
 
@@ -15,8 +18,7 @@ api.get('/api/v1/players/:id', async (req, res) => {
   const accountId = req.params.id;
   try {
     // if (!req.params.id) throwError(400, 'Bad Request');
-
-    const result = await queries.getPlayer(accountId);
+    const result = await player(accountId);
     res.status(200).send(result);
   } catch (error) {
     console.log(error);

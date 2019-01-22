@@ -2,7 +2,7 @@
  * Worker interfaces with external OpenDota API
  */
 
-const utility = require('../utils/utility');
+const utility = require('../../utils/utility');
 
 export function getWordCloud(accountId) {
   const container = utility.generateJob('api_word_cloud_od', {

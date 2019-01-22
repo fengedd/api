@@ -4,7 +4,7 @@
 
 import franc from 'franc';
 import * as swearjar from 'swearjar';
-import { getWordCloud } from '../../opendota';
+import { getWordCloud } from '../../opendota/opendota';
 
 function profanity(obj) {
   const typedWords = obj.my_word_counts;
@@ -39,14 +39,10 @@ function language(obj) {
 }
 
 function getWordCloudAnalysis(json) {
-  try {
-    return {
-      profanity: profanity(json),
-      language: language(json),
-    };
-  } catch (err) {
-    console.error(err);
-  }
+  return {
+    profanity: profanity(json),
+    language: language(json),
+  };
 }
 
 // eslint-disable-next-line import/prefer-default-export
@@ -57,5 +53,6 @@ export async function processWordCloud(accountId) {
     return getWordCloudAnalysis(wordCloud);
   } catch (err) {
     console.error(err);
+    return null;
   }
 }

@@ -1,5 +1,5 @@
-import ratingEstimate from '../performance-rating-estimator';
-import { getAccountSummary } from '../../stratz';
+import ratingEstimate from './utility/performance-rating-estimator';
+import { getAccountSummary } from '../../stratz/stratz';
 
 function jungleGamesCount(arr) {
   let res = { totalGames: null, jungleGames: null };
@@ -34,16 +34,12 @@ function lowPrioGamesCount(arr) {
 }
 
 function processPlayerTimeSummary(time) {
-  try {
-    const { rankMatches, laneMatches, gameModeMatches } = time;
-    return {
-      rating: ratingEstimate(rankMatches),
-      lowPrioGames: lowPrioGamesCount(gameModeMatches),
-      jungleGames: jungleGamesCount(laneMatches),
-    };
-  } catch (err) {
-    console.error(err);
-  }
+  const { rankMatches, laneMatches, gameModeMatches } = time;
+  return {
+    rating: ratingEstimate(rankMatches),
+    lowPrioGames: lowPrioGamesCount(gameModeMatches),
+    jungleGames: jungleGamesCount(laneMatches),
+  };
 }
 // eslint-disable-next-line import/prefer-default-export
 export async function processPlayerAccountSummary(accountId) {
@@ -57,5 +53,6 @@ export async function processPlayerAccountSummary(accountId) {
     };
   } catch (err) {
     console.error(err);
+    return null;
   }
 }
