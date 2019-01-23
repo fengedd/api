@@ -3,24 +3,15 @@ import processPlayerInfo from './processor/processPlayerInfo';
 import processPlayerAccountSummary from './processor/processAccountSummary';
 import processPeers from './processor/processPeers';
 
-async function player(accountId) {
-  return Promise.all([
-    processPlayerInfo(accountId),
-    processPlayerAccountSummary(accountId),
-    processPeers(accountId),
-    processWordCloud(accountId),
-  ]);
-}
-
 function toxicInfo(wordCloud, playerAccountSummary) {
-  const toxic = JSON.parse(JSON.stringify(playerAccountSummary));
-  delete toxic.oneMonth.rating;
-  delete toxic.sixMonths.rating;
-  delete toxic.allTime.rating;
+  const lowPrioGames = JSON.parse(JSON.stringify(playerAccountSummary));
+  delete lowPrioGames.oneMonth.rating;
+  delete lowPrioGames.sixMonths.rating;
+  delete lowPrioGames.allTime.rating;
 
   return {
-    wordCloud,
-    toxic,
+    words: wordCloud,
+    lowPrioGames,
   };
 }
 
@@ -45,32 +36,51 @@ function playerStrength(playerAccountSummary, playerInfo) {
   };
 }
 
-async function playerCleanUp(accountId) {
-  /*
-  const result = await Promise.all([
-    processPlayerInfo(accountId),
-    processPlayerAccountSummary(accountId),
-    processPeers(accountId),
-    processWordCloud(accountId),
-  ]);
-  */
-  // General Info
-  const playerInfo = await processPlayerInfo(accountId);
-  const playerAccountSummary = await processPlayerAccountSummary(accountId);
-  const wordCloud = await processWordCloud(accountId);
+function generalInfo(playerInfo, accountId) {
+  const {
+    avatarFull,
+    name,
+    profileUrl,
+    isAnonymous,
+    firstMatchDate,
+    names,
+  } = playerInfo;
 
-  // const peers = processPeers(accountId);
-
-  // Player strength and toxic
-
-  // console.log(ratingAT);
-  // Toxic
-  toxicInfo(wordCloud, playerAccountSummary);
-  playerStrength(playerAccountSummary, playerInfo);
-
-  // return base;
+  return {
+    id: accountId,
+    name,
+    profileUrl,
+    avatarFull,
+    firstMatchDate,
+    isAnonymous,
+    names,
+  };
 }
 
-playerCleanUp(244442223);
+async function playerCleanUp(accountId) {
+  const promises = await Promise.all([
+    processPlayerInfo(accountId),
+    processPlayerAccountSummary(accountId),
+    processWordCloud(accountId),
+    processPeers(accountId),
+  ]);
+
+  const {
+    0: playerInfo,
+    1: playerAccountSummary,
+    2: wordCloud,
+    3: peers,
+  } = promises;
+
+  const res = generalInfo(playerInfo, accountId);
+  res.toxic = toxicInfo(wordCloud, playerAccountSummary);
+  res.playerStrength = playerStrength(playerAccountSummary, playerInfo);
+  res.peers = peers;
+
+  return res;
+}
+async function player(accountId) {
+  return playerCleanUp(accountId);
+}
 
 export { player as default };
