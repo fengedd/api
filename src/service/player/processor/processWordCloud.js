@@ -46,7 +46,7 @@ function getWordCloudAnalysis(json) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export async function processWordCloud(accountId) {
+async function processWordCloud(accountId) {
   try {
     // twitch regex ((tw(\s|\.tv)|twitch(\s|\.tv|\/)|t?\.tv)(\/|\s)?))
     const wordCloud = await getWordCloud(accountId);
@@ -56,3 +56,5 @@ export async function processWordCloud(accountId) {
     return null;
   }
 }
+
+export { processWordCloud as default };

@@ -1,35 +1,19 @@
 import ratingEstimate from './utility/performance-rating-estimator';
 import { getAccountSummary } from '../../stratz/stratz';
 
-function jungleGamesCount(arr) {
-  let res = { totalGames: null, jungleGames: null };
+function gameCount(arr, id) {
+  let res = { total: null, count: null };
   if (arr.length === 0) return res;
-  let jungleGames = 0;
-  let totalGames = 0;
+  let count = 0;
+  let total = 0;
   arr.forEach(e => {
-    const isJungleGame = e.id === 4;
-    if (isJungleGame) {
-      jungleGames = e.matchCount;
+    const isGame = e.id === id;
+    if (isGame) {
+      count = e.matchCount;
     }
-    totalGames += e.matchCount;
+    total += e.matchCount;
   });
-  res = { totalGames, jungleGames };
-  return res;
-}
-
-function lowPrioGamesCount(arr) {
-  let res = { totalGames: null, lowPrioGames: null };
-  if (arr.length === 0) return res;
-  let lowPrioGames = 0;
-  let totalGames = 0;
-  arr.forEach(e => {
-    const isLowPrioGame = e.id === 4;
-    if (isLowPrioGame) {
-      lowPrioGames = e.matchCount;
-    }
-    totalGames += e.matchCount;
-  });
-  res = { totalGames, lowPrioGames };
+  res = { total, count };
   return res;
 }
 
@@ -37,15 +21,17 @@ function processPlayerTimeSummary(time) {
   const { rankMatches, laneMatches, gameModeMatches } = time;
   return {
     rating: ratingEstimate(rankMatches),
-    lowPrioGames: lowPrioGamesCount(gameModeMatches),
-    jungleGames: jungleGamesCount(laneMatches),
+    lowPrioGames: gameCount(gameModeMatches, 4).count,
+    jungleGames: gameCount(laneMatches, 4).count,
+    totalGames: gameCount(gameModeMatches, 0).total,
   };
 }
 // eslint-disable-next-line import/prefer-default-export
-export async function processPlayerAccountSummary(accountId) {
+async function processPlayerAccountSummary(accountId) {
   try {
     const stratzAccountSummary = await getAccountSummary(accountId);
     const { oneMonth, sixMonths, allTime } = stratzAccountSummary;
+
     return {
       oneMonth: processPlayerTimeSummary(oneMonth),
       sixMonths: processPlayerTimeSummary(sixMonths),
@@ -56,3 +42,5 @@ export async function processPlayerAccountSummary(accountId) {
     return null;
   }
 }
+
+export { processPlayerAccountSummary as default };

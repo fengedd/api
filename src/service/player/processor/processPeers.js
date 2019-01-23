@@ -5,8 +5,7 @@ function isFriend(player) {
   return player.with_games > player.against_games;
 }
 
-// eslint-disable-next-line import/prefer-default-export
-function enemyFriendCounter(obj) {
+function enemyFriendTopTenCounter(obj) {
   const list = obj;
   const friends = [];
   const enemies = [];
@@ -21,33 +20,21 @@ function enemyFriendCounter(obj) {
     }
   });
 
-  return { friends, enemies };
+  friends.sort((a, b) => b.with_games - a.with_games);
+  enemies.sort((a, b) => b.against_games - a.against_games);
+
+  return { friends: friends.slice(0, 10), enemies: enemies.slice(0, 10) };
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export async function processPeers(accountId) {
+async function processPeers(accountId) {
   try {
     const peersPayload = await getPeers(accountId);
-    return enemyFriendCounter(peersPayload);
+    return enemyFriendTopTenCounter(peersPayload);
   } catch (err) {
     console.error(err);
     return null;
   }
 }
 
-/*
-// eslint-disable-next-line consistent-return
-const ex = async () => {
-  // eslint-disable-next-line global-require
-  try {
-    const res = await require('./opendota').getPeers(244442223);
-    return res;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-ex().then(val => {
-  console.log(getPeersAnalysis(val));
-});
-*/
+export { processPeers as default };

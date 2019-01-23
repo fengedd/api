@@ -27,8 +27,6 @@ function cleanUpPlayerInfo(obj) {
   const {
     name,
     profileUrl,
-    avatar,
-    avatarMedium,
     avatarFull,
     rank,
     leaderBoardRank,
@@ -44,8 +42,6 @@ function cleanUpPlayerInfo(obj) {
   return {
     name,
     profileUrl,
-    avatar,
-    avatarMedium,
     avatarFull,
     rank,
     leaderBoardRank,
@@ -57,7 +53,7 @@ function cleanUpPlayerInfo(obj) {
 }
 
 // eslint-disable-next-line import/prefer-default-export
-export async function processPlayerInfo(accountId) {
+async function processPlayerInfo(accountId) {
   try {
     const stratzAccountInfo = await getAccountInfo(accountId);
     return cleanUpPlayerInfo(stratzAccountInfo);
@@ -66,3 +62,5 @@ export async function processPlayerInfo(accountId) {
     return null;
   }
 }
+
+export { processPlayerInfo as default };
