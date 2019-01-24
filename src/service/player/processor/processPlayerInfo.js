@@ -1,5 +1,4 @@
 import { getAccountInfo } from '../../stratz/stratz';
-
 function cleanUpNames(arr) {
   let res = [];
   if (arr.length === 0) return res;
@@ -55,8 +54,8 @@ function cleanUpPlayerInfo(obj) {
 // eslint-disable-next-line import/prefer-default-export
 async function processPlayerInfo(accountId) {
   try {
-    const stratzAccountInfo = await getAccountInfo(accountId);
-    return cleanUpPlayerInfo(stratzAccountInfo);
+    const stratzPlayerInfo = await getAccountInfo(accountId);
+    return cleanUpPlayerInfo(stratzPlayerInfo);
   } catch (err) {
     console.error(err);
     return null;

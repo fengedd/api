@@ -57,30 +57,56 @@ function generalInfo(playerInfo, accountId) {
   };
 }
 
-async function playerCleanUp(accountId) {
-  const promises = await Promise.all([
-    processPlayerInfo(accountId),
-    processPlayerAccountSummary(accountId),
-    processWordCloud(accountId),
-    processPeers(accountId),
-  ]);
-
-  const {
-    0: playerInfo,
-    1: playerAccountSummary,
-    2: wordCloud,
-    3: peers,
-  } = promises;
-
-  const res = generalInfo(playerInfo, accountId);
-  res.toxic = toxicInfo(wordCloud, playerAccountSummary);
-  res.playerStrength = playerStrength(playerAccountSummary, playerInfo);
-  res.peers = peers;
-
-  return res;
-}
 async function player(accountId) {
-  return playerCleanUp(accountId);
+  try {
+    const stratzPromises = Promise.all([
+      processPlayerInfo(accountId),
+      processPlayerAccountSummary(accountId),
+    ]).catch(err => {
+      throw err;
+    });
+
+    let openDotaAvail = true;
+
+    const odPromises = Promise.all([
+      processWordCloud(accountId),
+      processPeers(accountId),
+    ]).catch(err => {
+      openDotaAvail = false;
+      console.error(err);
+    });
+
+    const promises = await Promise.all([stratzPromises, odPromises]);
+
+    // console.log(promises);
+    const { 0: stratzResponse, 1: odResponse } = promises;
+    const { 0: playerInfo, 1: playerAccountSummary } = stratzResponse;
+    const { 0: wordCloud, 1: peers } = odResponse;
+
+    const res = generalInfo(playerInfo, accountId);
+    res.playerStrength = playerStrength(playerAccountSummary, playerInfo);
+
+    if (openDotaAvail) {
+      res.toxic = toxicInfo(wordCloud, playerAccountSummary);
+      res.peers = peers;
+    }
+
+    return res;
+  } catch (error) {
+    return {
+      id: null,
+      name: null,
+      profileUrl: null,
+      avatarFull: null,
+      firstMatchDate: null,
+      isAnonymous: null,
+      names: null,
+      playerStrength: null,
+      toxic: null,
+      peers: null,
+    };
+  }
 }
 
+player(30).then(v => console.log(v));
 export { player as default };

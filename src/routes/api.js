@@ -18,6 +18,7 @@ api.get('/api/v1/players/:id', async (req, res) => {
   const accountId = req.params.id;
   try {
     // if (!req.params.id) throwError(400, 'Bad Request');
+    if (Number.isNaN(accountId)) throw Error('Invalid ID');
     const result = await player(accountId);
     res.status(200).send(result);
   } catch (error) {

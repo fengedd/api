@@ -111,6 +111,14 @@ const isError = (err, res, body) => {
   );
 };
 */
+
+/**
+ * Wrapper around HTTP requests that handles:
+ * retries, retry delay
+ * errors
+ * @param {*} u
+ * @param {*} cb
+ */
 function getData(u, cb) {
   const delay = Number(config.DEFAULT_DELAY);
   const timeout = 5000;
@@ -121,12 +129,34 @@ function getData(u, cb) {
   const options = {
     method: 'GET',
     url: target,
-    json: true, // weird take out later
+    json: true,
+    resolveWithFullResponse: true,
     timeout,
   };
   console.log('%s - getData: %s', new Date(), target);
-  const req = request(options);
-  return req;
+
+  return request(options)
+    .then(response => {
+      console.log(response.statusCode);
+      console.log('%s - getData - succesful request %s', new Date(), target);
+      return response.body;
+    })
+    .catch(error => {
+      console.error(error.statusCode);
+      console.error(error.stack);
+      return null;
+    });
+
+  /*
+  try {
+    const req = request(options);
+    return req;
+  } catch (err) {
+    console.error(err.stack);
+
+    return null;
+  }
+  */
 
   /*
   function delay(ms) {
