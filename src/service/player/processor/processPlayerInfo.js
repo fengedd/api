@@ -1,4 +1,5 @@
 import { getAccountInfo } from '../../stratz/stratz';
+
 function cleanUpNames(arr) {
   let res = [];
   if (arr.length === 0) return res;

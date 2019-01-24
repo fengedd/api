@@ -10,8 +10,7 @@ function toxicInfo(wordCloud, playerAccountSummary) {
   delete lowPrioGames.allTime.rating;
 
   return {
-    words: wordCloud,
-    lowPrioGames,
+    toxic: { words: wordCloud, lowPrioGames },
   };
 }
 
@@ -25,18 +24,20 @@ function playerStrength(playerAccountSummary, playerInfo) {
   const { rank, previousRank, leaderBoardRank } = playerInfo;
 
   return {
-    rank,
-    previousRank,
-    leaderBoardRank,
-    estimatedRank: {
-      oneMonth,
-      sixMonths,
-      allTime,
+    playerStrength: {
+      rank,
+      previousRank,
+      leaderBoardRank,
+      estimatedRank: {
+        oneMonth,
+        sixMonths,
+        allTime,
+      },
     },
   };
 }
 
-function generalInfo(playerInfo, accountId) {
+function generalInfo(playerInfo) {
   const {
     avatarFull,
     name,
@@ -47,7 +48,6 @@ function generalInfo(playerInfo, accountId) {
   } = playerInfo;
 
   return {
-    id: accountId,
     name,
     profileUrl,
     avatarFull,
@@ -58,6 +58,19 @@ function generalInfo(playerInfo, accountId) {
 }
 
 async function player(accountId) {
+  const res = {
+    id: accountId,
+    name: null,
+    profileUrl: null,
+    avatarFull: null,
+    firstMatchDate: null,
+    isAnonymous: null,
+    names: null,
+    playerStrength: null,
+    toxic: null,
+    peers: null,
+  };
+
   try {
     const stratzPromises = Promise.all([
       processPlayerInfo(accountId),
@@ -78,35 +91,23 @@ async function player(accountId) {
 
     const promises = await Promise.all([stratzPromises, odPromises]);
 
-    // console.log(promises);
     const { 0: stratzResponse, 1: odResponse } = promises;
     const { 0: playerInfo, 1: playerAccountSummary } = stratzResponse;
     const { 0: wordCloud, 1: peers } = odResponse;
 
-    const res = generalInfo(playerInfo, accountId);
-    res.playerStrength = playerStrength(playerAccountSummary, playerInfo);
+    Object.assign(res, generalInfo(playerInfo));
+    Object.assign(res, playerStrength(playerAccountSummary, playerInfo));
 
     if (openDotaAvail) {
-      res.toxic = toxicInfo(wordCloud, playerAccountSummary);
+      Object.assign(res, toxicInfo(wordCloud, playerAccountSummary));
       res.peers = peers;
     }
 
     return res;
   } catch (error) {
-    return {
-      id: null,
-      name: null,
-      profileUrl: null,
-      avatarFull: null,
-      firstMatchDate: null,
-      isAnonymous: null,
-      names: null,
-      playerStrength: null,
-      toxic: null,
-      peers: null,
-    };
+    console.error(error);
+    return res;
   }
 }
 
-player(30).then(v => console.log(v));
 export { player as default };

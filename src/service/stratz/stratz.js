@@ -8,7 +8,7 @@ export function getAccountInfo(accountId) {
     account_id: accountId,
   });
 
-  const res = utility.getData(container.url, null);
+  const res = utility.getData(container.url);
   return res;
 }
 
@@ -17,7 +17,7 @@ export function getAccountSummary(accountId) {
     account_id: accountId,
   });
 
-  const res = utility.getData(container.url, null);
+  const res = utility.getData(container.url);
   return res;
 }
 

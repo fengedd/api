@@ -1,15 +1,13 @@
+import urllib from 'url';
+import request from 'request-promise';
+// import config from '../config';
+
 /**
  * Creates a job object for enqueing that contains details of API endpoints to hit
  */
-
-const config = require('../config');
-const urllib = require('url');
-const request = require('request-promise');
-
-function generateJob(type, payload) {
+export function generateJob(type, payload) {
   const openDotaApiUrl = 'https://api.opendota.com/api';
   const stratzApiUrl = 'https://api.stratz.com/api';
-  let apiKey;
   const opts = {
     api_word_cloud_od() {
       return {
@@ -70,61 +68,14 @@ function generateJob(type, payload) {
   return opts[type]();
 }
 
-/*
-const handleResponse = (err, res, body) => {
-  if (isError(err, res, body)) {
-    // invalid response
-    if (url.noRetry) {
-      return cb(err || 'invalid response');
-    }
-
-    // console error
-
-    const backoff = 0;
-    return setTimeout(() => {
-      getData(url, cb);
-    }, backoff);
-  }
-  if (body.result) {
-    //Query fail
-    console.log('Query fail');
-  }
-  return cb(null, body, {
-    hostname: parse.host,
-  });
-};
-
-const isError = (err, res, body) => {
-  return (
-    err ||
-    !res ||
-    res.statusCode !== 200 ||
-    !body ||
-    (!url.raw &&
-      !body.result &&
-      !body.response &&
-      !body.player_infos &&
-      !body.teams &&
-      !body.game_list &&
-      !body.match &&
-      !body.data)
-  );
-};
-*/
-
 /**
  * Wrapper around HTTP requests that handles:
- * retries, retry delay
- * errors
- * @param {*} u
- * @param {*} cb
+ * parsing, errors
  */
-function getData(u, cb) {
-  const delay = Number(config.DEFAULT_DELAY);
+export function getData(u) {
+  // const delay = Number(config.DEFAULT_DELAY);
   const timeout = 5000;
   const parse = urllib.parse(u, true);
-  const openDotaApi = parse.host === 'api.opendota.com';
-  const stratzApi = parse.host === 'api.stratz.com';
   const target = urllib.format(parse);
   const options = {
     method: 'GET',
@@ -133,47 +84,13 @@ function getData(u, cb) {
     resolveWithFullResponse: true,
     timeout,
   };
+
   console.log('%s - getData: %s', new Date(), target);
 
   return request(options)
-    .then(response => {
-      console.log(response.statusCode);
-      console.log('%s - getData - succesful request %s', new Date(), target);
-      return response.body;
-    })
+    .then(response => response.body)
     .catch(error => {
-      console.error(error.statusCode);
-      console.error(error.stack);
+      console.error('%s API request Error %s', new Date(), error.statusCode);
       return null;
     });
-
-  /*
-  try {
-    const req = request(options);
-    return req;
-  } catch (err) {
-    console.error(err.stack);
-
-    return null;
-  }
-  */
-
-  /*
-  function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-  */
-
-  /*
-  return setTimeout(() => {
-    request(options).then(val => {
-      return val;
-    }, null);
-  }, delay);
-  */
 }
-/*
-(err, res, body) => {
-        console.log(err + res + body);
-*/
-module.exports = { generateJob, getData };

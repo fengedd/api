@@ -9,7 +9,7 @@ export function getWordCloud(accountId) {
     account_id: accountId,
   });
 
-  const res = utility.getData(container.url, null);
+  const res = utility.getData(container.url);
   return res;
 }
 
@@ -18,7 +18,7 @@ export function getPeers(accountId) {
     account_id: accountId,
   });
 
-  const res = utility.getData(container.url, null);
+  const res = utility.getData(container.url);
   return res;
 }
 
