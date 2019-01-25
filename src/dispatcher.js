@@ -10,9 +10,8 @@ async function getPlayer(accountId) {
   }
 
   const res = await player(accountId);
-  client.set(accountId, JSON.stringify(res), 'EX', 10);
+  client.set(accountId, JSON.stringify(res), 'EX', 86400);
   return res;
 }
 
 export { getPlayer as default };
-// player(244442223).then(v => console.log(v));

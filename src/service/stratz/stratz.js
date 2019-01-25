@@ -1,7 +1,8 @@
 /**
  * Worker interfaces with external Stratz API
  */
-const utility = require('../../utils/utility');
+
+const utility = require('../utility');
 
 export function getAccountInfo(accountId) {
   const container = utility.generateJob('api_account_info_stratz', {

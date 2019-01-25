@@ -11,10 +11,12 @@
 
 /* @flow */
 
-import path from 'path';
 import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
+
+import path from 'path';
+
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import session from 'express-session';
@@ -25,20 +27,10 @@ import i18nextMiddleware, {
   LanguageDetector,
 } from 'i18next-express-middleware';
 import i18nextBackend from 'i18next-node-fs-backend';
-import expressGraphQL from 'express-graphql';
 import PrettyError from 'pretty-error';
-import { printSchema } from 'graphql';
 
-import email from './email';
 import redis from './redis';
-import passport from './passport';
-import accountRoutes from './routes/account';
-import schema from './schema';
-import Context from './Context';
-import errors from './errors';
-import db from './db';
-
-const api = require('./routes/api');
+import api from './routes/api';
 
 i18next
   .use(LanguageDetector)
@@ -88,23 +80,22 @@ app.use(
     secret: process.env.SESSION_SECRET,
   }),
 );
-app.use(i18nextMiddleware.handle(i18next));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
 
-app.use(accountRoutes);
+app.use(i18nextMiddleware.handle(i18next));
+
+app.use(flash());
 app.use(api);
 
+/*
 // The following routes are intended to be used in development mode only
 if (process.env.NODE_ENV !== 'production') {
   // A route for testing email templates
-  /*
+
   app.get('/:email(email|emails)/:template', (req, res) => {
     const message = email.render(req.params.template, { t: req.t, v: 123 });
     res.send(message.html);
   });
-  */
+
 
   // A route for testing authentication/authorization
   app.get('/', (req, res) => {
@@ -125,33 +116,6 @@ if (process.env.NODE_ENV !== 'production') {
     }
   });
 }
-
-/*
-app.get('/graphql/schema', (req, res) => {
-  res.type('text/plain').send(printSchema(schema));
-});
-
-
-
-app.use(
-  '/graphql',
-  expressGraphQL(req => ({
-    schema,
-    context: new Context(req),
-    graphiql: process.env.NODE_ENV !== 'production',
-    pretty: process.env.NODE_ENV !== 'production',
-    formatError: (error: any) => {
-      errors.report(error.originalError || error);
-      return {
-        message: error.message,
-        code: error.originalError && error.originalError.code,
-        state: error.originalError && error.originalError.state,
-        locations: error.locations,
-        path: error.path,
-      };
-    },
-  })),
-);
 */
 
 const pe = new PrettyError();
