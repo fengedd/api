@@ -1,12 +1,17 @@
 import player from './service/player/player';
+import client from './redis';
 
-function getPlayer(accountId) {
-  const notInCache = true;
-  if (notInCache) {
-    return player(accountId);
+async function getPlayer(accountId) {
+  const result = await client.getAsync(accountId);
+
+  if (result) {
+    console.log('%s Found in cache %s', new Date(), accountId);
+    return result;
   }
 
-  return player(accountId);
+  const res = await player(accountId);
+  client.set(accountId, JSON.stringify(res), 'EX', 10);
+  return res;
 }
 
 export { getPlayer as default };
