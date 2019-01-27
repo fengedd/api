@@ -37,3 +37,4 @@ yarn.lock
 .stylelintrc.yaml
 .stylelintrc.json
 .stylelintrc.js
+.vscode
